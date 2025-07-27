@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		75F13ACE2E35891000B9B3DE /* PostPiqueShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 75F13AC42E35890F00B9B3DE /* PostPiqueShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		75F13A9A2E3585E200B9B3DE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,17 +25,62 @@
 			remoteGlobalIDString = 75F13A8A2E3585E000B9B3DE;
 			remoteInfo = PostPique;
 		};
+		75F13ACC2E35891000B9B3DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75F13A832E3585E000B9B3DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75F13AC32E35890F00B9B3DE;
+			remoteInfo = PostPiqueShareExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		75F13AD32E35891000B9B3DE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				75F13ACE2E35891000B9B3DE /* PostPiqueShareExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		75F13A8B2E3585E000B9B3DE /* PostPique.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostPique.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F13A992E3585E200B9B3DE /* PostPiqueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PostPiqueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F13AA32E3585E200B9B3DE /* PostPiqueUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PostPiqueUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		75F13AC42E35890F00B9B3DE /* PostPiqueShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PostPiqueShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		75F13ACF2E35891000B9B3DE /* Exceptions for "PostPiqueShareExtension" folder in "PostPiqueShareExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 75F13AC32E35890F00B9B3DE /* PostPiqueShareExtension */;
+		};
+		75F13ADA2E358A2700B9B3DE /* Exceptions for "PostPique" folder in "PostPiqueShareExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				GitHubAPIService.swift,
+				KeychainService.swift,
+				Models.swift,
+			);
+			target = 75F13AC32E35890F00B9B3DE /* PostPiqueShareExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		75F13A8D2E3585E000B9B3DE /* PostPique */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				75F13ADA2E358A2700B9B3DE /* Exceptions for "PostPique" folder in "PostPiqueShareExtension" target */,
+			);
 			path = PostPique;
 			sourceTree = "<group>";
 		};
@@ -43,6 +92,14 @@
 		75F13AA62E3585E200B9B3DE /* PostPiqueUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = PostPiqueUITests;
+			sourceTree = "<group>";
+		};
+		75F13AC52E35890F00B9B3DE /* PostPiqueShareExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				75F13ACF2E35891000B9B3DE /* Exceptions for "PostPiqueShareExtension" folder in "PostPiqueShareExtension" target */,
+			);
+			path = PostPiqueShareExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,6 +126,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		75F13AC12E35890F00B9B3DE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -78,6 +142,7 @@
 				75F13A8D2E3585E000B9B3DE /* PostPique */,
 				75F13A9C2E3585E200B9B3DE /* PostPiqueTests */,
 				75F13AA62E3585E200B9B3DE /* PostPiqueUITests */,
+				75F13AC52E35890F00B9B3DE /* PostPiqueShareExtension */,
 				75F13A8C2E3585E000B9B3DE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +153,7 @@
 				75F13A8B2E3585E000B9B3DE /* PostPique.app */,
 				75F13A992E3585E200B9B3DE /* PostPiqueTests.xctest */,
 				75F13AA32E3585E200B9B3DE /* PostPiqueUITests.xctest */,
+				75F13AC42E35890F00B9B3DE /* PostPiqueShareExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,10 +168,12 @@
 				75F13A872E3585E000B9B3DE /* Sources */,
 				75F13A882E3585E000B9B3DE /* Frameworks */,
 				75F13A892E3585E000B9B3DE /* Resources */,
+				75F13AD32E35891000B9B3DE /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				75F13ACD2E35891000B9B3DE /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				75F13A8D2E3585E000B9B3DE /* PostPique */,
@@ -163,6 +231,28 @@
 			productReference = 75F13AA32E3585E200B9B3DE /* PostPiqueUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		75F13AC32E35890F00B9B3DE /* PostPiqueShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75F13AD02E35891000B9B3DE /* Build configuration list for PBXNativeTarget "PostPiqueShareExtension" */;
+			buildPhases = (
+				75F13AC02E35890F00B9B3DE /* Sources */,
+				75F13AC12E35890F00B9B3DE /* Frameworks */,
+				75F13AC22E35890F00B9B3DE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				75F13AC52E35890F00B9B3DE /* PostPiqueShareExtension */,
+			);
+			name = PostPiqueShareExtension;
+			packageProductDependencies = (
+			);
+			productName = PostPiqueShareExtension;
+			productReference = 75F13AC42E35890F00B9B3DE /* PostPiqueShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -184,6 +274,9 @@
 						CreatedOnToolsVersion = 16.4;
 						TestTargetID = 75F13A8A2E3585E000B9B3DE;
 					};
+					75F13AC32E35890F00B9B3DE = {
+						CreatedOnToolsVersion = 16.4;
+					};
 				};
 			};
 			buildConfigurationList = 75F13A862E3585E000B9B3DE /* Build configuration list for PBXProject "PostPique" */;
@@ -195,6 +288,8 @@
 			);
 			mainGroup = 75F13A822E3585E000B9B3DE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 75F13A8C2E3585E000B9B3DE /* Products */;
 			projectDirPath = "";
@@ -203,6 +298,7 @@
 				75F13A8A2E3585E000B9B3DE /* PostPique */,
 				75F13A982E3585E200B9B3DE /* PostPiqueTests */,
 				75F13AA22E3585E200B9B3DE /* PostPiqueUITests */,
+				75F13AC32E35890F00B9B3DE /* PostPiqueShareExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +319,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		75F13AA12E3585E200B9B3DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75F13AC22E35890F00B9B3DE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,6 +356,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		75F13AC02E35890F00B9B3DE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -265,6 +375,11 @@
 			isa = PBXTargetDependency;
 			target = 75F13A8A2E3585E000B9B3DE /* PostPique */;
 			targetProxy = 75F13AA42E3585E200B9B3DE /* PBXContainerItemProxy */;
+		};
+		75F13ACD2E35891000B9B3DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75F13AC32E35890F00B9B3DE /* PostPiqueShareExtension */;
+			targetProxy = 75F13ACC2E35891000B9B3DE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -390,6 +505,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = PostPique/PostPique.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -407,20 +523,21 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kyleolivo.PostPique;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				XROS_DEPLOYMENT_TARGET = 2.5;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
@@ -429,6 +546,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = PostPique/PostPique.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -446,20 +564,21 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kyleolivo.PostPique;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				XROS_DEPLOYMENT_TARGET = 2.5;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
@@ -553,6 +672,69 @@
 			};
 			name = Release;
 		};
+		75F13AD12E35891000B9B3DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_ENTITLEMENTS = PostPiqueShareExtension/PostPiqueShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RT39N6W586;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PostPiqueShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PostPique;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kyleolivo.PostPique.PostPiqueShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "xrsimulator xros watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		75F13AD22E35891000B9B3DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_ENTITLEMENTS = PostPiqueShareExtension/PostPiqueShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RT39N6W586;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PostPiqueShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PostPique;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kyleolivo.PostPique.PostPiqueShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "xrsimulator xros watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -588,6 +770,15 @@
 			buildConfigurations = (
 				75F13AB42E3585E200B9B3DE /* Debug */,
 				75F13AB52E3585E200B9B3DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		75F13AD02E35891000B9B3DE /* Build configuration list for PBXNativeTarget "PostPiqueShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75F13AD12E35891000B9B3DE /* Debug */,
+				75F13AD22E35891000B9B3DE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

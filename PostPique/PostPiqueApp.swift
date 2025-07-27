@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct PostPiqueApp: App {
+    @StateObject private var authManager = GitHubAuthManager.shared
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(authManager)
         }
+        .windowResizability(.contentSize)
     }
 }

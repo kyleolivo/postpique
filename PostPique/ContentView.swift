@@ -210,6 +210,7 @@ struct UnauthenticatedView: View {
 struct AuthenticatedView: View {
     @EnvironmentObject var authManager: GitHubAuthManager
     @State private var showingRepositoryPicker = false
+    @State private var showingDonation = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -249,8 +250,24 @@ struct AuthenticatedView: View {
             }
             .padding(.top, 12)
             
-            // Bottom section with sign out
+            // Bottom section with donation and sign out
             VStack(spacing: 0) {
+                Button(action: {
+                    showingDonation = true
+                }) {
+                    HStack {
+                        Text("Buy me a ☕")
+                            .foregroundColor(.white)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Color(red: 0.2, green: 0.8, blue: 0.8))
+                    .cornerRadius(25)
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 16)
+                
                 Divider()
                 
                 Button("Sign Out") {
@@ -264,6 +281,9 @@ struct AuthenticatedView: View {
         .sheet(isPresented: $showingRepositoryPicker) {
             RepositoryPickerView()
                 .environmentObject(authManager)
+        }
+        .sheet(isPresented: $showingDonation) {
+            DonationView()
         }
         .task {
             await authManager.loadRepositories()

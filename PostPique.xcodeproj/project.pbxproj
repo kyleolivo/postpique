@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		758D611A2E37339A00A2B08B /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 758D61192E37339A00A2B08B /* Products.storekit */; };
 		75F13ACE2E35891000B9B3DE /* PostPiqueShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 75F13AC42E35890F00B9B3DE /* PostPiqueShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		758D61192E37339A00A2B08B /* Products.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
 		75F13A8B2E3585E000B9B3DE /* PostPique.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostPique.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F13A992E3585E200B9B3DE /* PostPiqueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PostPiqueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F13AA32E3585E200B9B3DE /* PostPiqueUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PostPiqueUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,6 +131,7 @@
 		75F13A822E3585E000B9B3DE = {
 			isa = PBXGroup;
 			children = (
+				758D61192E37339A00A2B08B /* Products.storekit */,
 				75F13A8D2E3585E000B9B3DE /* PostPique */,
 				75F13AC52E35890F00B9B3DE /* PostPiqueShareExtension */,
 				75F13A8C2E3585E000B9B3DE /* Products */,
@@ -290,6 +293,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				758D611A2E37339A00A2B08B /* Products.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

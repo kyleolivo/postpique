@@ -5,14 +5,24 @@
 //  Created by Kyle Olivo on 7/26/25.
 //
 
+#if os(macOS)
 import Cocoa
+typealias PlatformViewController = NSViewController
+typealias PlatformNibName = NSNib.Name
+typealias PlatformHostingController = NSHostingController
+#else
+import UIKit
+typealias PlatformViewController = UIViewController
+typealias PlatformNibName = String
+typealias PlatformHostingController = UIHostingController
+#endif
 import SwiftUI
 import UniformTypeIdentifiers
 
-class ShareViewController: NSViewController {
+class ShareViewController: PlatformViewController {
     private let keychainService = KeychainService.shared
     
-    override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
+    override init(nibName nibNameOrNil: PlatformNibName?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -32,6 +42,7 @@ class ShareViewController: NSViewController {
         }
     }
     
+#if os(macOS)
     override func viewDidAppear() {
         super.viewDidAppear()
         
@@ -40,6 +51,16 @@ class ShareViewController: NSViewController {
             extractSharedContent()
         }
     }
+#else
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Re-extract content when view appears (handles reopen case)
+        if keychainService.getSelectedRepository() != nil {
+            extractSharedContent()
+        }
+    }
+#endif
     
     
     private func setupShareView() {
@@ -64,18 +85,23 @@ class ShareViewController: NSViewController {
     }
     
     private func setupHostingController<T: View>(with view: T) {
-        let hostingController = NSHostingController(rootView: view)
+        let hostingController = PlatformHostingController(rootView: view)
         
         addChild(hostingController)
         self.view.addSubview(hostingController.view)
         
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+#if os(macOS)
         NSLayoutConstraint.activate([
             hostingController.view.topAnchor.constraint(equalTo: self.view.topAnchor),
             hostingController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             hostingController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             hostingController.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
+#else
+        hostingController.view.frame = self.view.bounds
+        hostingController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+#endif
     }
     
     private func extractSharedContent() {

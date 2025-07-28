@@ -57,11 +57,33 @@ struct UnauthenticatedView: View {
             VStack(spacing: 24) {
                 // App Icon with background
                 VStack(spacing: 0) {
-                    Image(nsImage: NSImage(named: "AppIcon")!)
-                        .resizable()
-                        .frame(width: 96, height: 96)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
+#if os(macOS)
+                    if let appIcon = NSImage(named: "AppIcon") {
+                        Image(nsImage: appIcon)
+                            .resizable()
+                            .frame(width: 96, height: 96)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
+                    } else {
+                        Image(systemName: "app.fill")
+                            .font(.system(size: 96))
+                            .foregroundColor(.blue)
+                            .frame(width: 96, height: 96)
+                    }
+#else
+                    if let appIcon = UIImage(named: "AppIcon") {
+                        Image(uiImage: appIcon)
+                            .resizable()
+                            .frame(width: 96, height: 96)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
+                    } else {
+                        Image(systemName: "app.fill")
+                            .font(.system(size: 96))
+                            .foregroundColor(.blue)
+                            .frame(width: 96, height: 96)
+                    }
+#endif
                 }
                 .padding(.bottom, 8)
                 

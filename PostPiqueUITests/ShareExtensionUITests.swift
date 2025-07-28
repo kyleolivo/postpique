@@ -246,7 +246,7 @@ class ShareExtensionUITests: XCTestCase {
         }
         
         // Measure interaction responsiveness
-        measure(metrics: [XCTUIActionPerformanceMetric()]) {
+        measure {
             let textViews = app.textViews
             if textViews.count > 0 {
                 textViews.firstMatch.tap()
@@ -264,7 +264,7 @@ class ShareExtensionUITests: XCTestCase {
         let quotationField = app.textViews.element(boundBy: 0)
         
         // Measure text input speed
-        measure(metrics: [XCTUIActionPerformanceMetric()]) {
+        measure {
             quotationField.tap()
             quotationField.typeText("Performance test text")
         }

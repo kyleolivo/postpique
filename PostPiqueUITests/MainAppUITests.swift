@@ -281,7 +281,7 @@ class MainAppUITests: XCTestCase {
         // Test UI responsiveness during interactions
         let signInButton = app.buttons["Sign in with GitHub"]
         
-        measure(metrics: [XCTUIActionPerformanceMetric()]) {
+        measure {
             if signInButton.exists {
                 signInButton.tap()
                 

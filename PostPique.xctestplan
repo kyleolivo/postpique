@@ -18,6 +18,29 @@
   },
   "testTargets" : [
     {
+      "skippedTests" : [
+        "ShareExtensionUITests",
+        "ShareExtensionUITests\/testShareExtensionAccessibility()",
+        "ShareExtensionUITests\/testShareExtensionCancel()",
+        "ShareExtensionUITests\/testShareExtensionContentValidation()",
+        "ShareExtensionUITests\/testShareExtensionLaunchSpeed()",
+        "ShareExtensionUITests\/testShareExtensionLaunchesFromSafari()",
+        "ShareExtensionUITests\/testShareExtensionPlatformDifferences()",
+        "ShareExtensionUITests\/testShareExtensionPostButtonState()",
+        "ShareExtensionUITests\/testShareExtensionReceivesWebContent()",
+        "ShareExtensionUITests\/testShareExtensionTextInput()",
+        "ShareExtensionUITests\/testShareExtensionTextInputPerformance()",
+        "ShareExtensionUITests\/testShareExtensionToMainAppIntegration()",
+        "ShareExtensionUITests\/testShareExtensionUIElements()",
+        "ShareExtensionUITests\/testShareExtensionWithoutRepository()"
+      ],
+      "target" : {
+        "containerPath" : "container:PostPique.xcodeproj",
+        "identifier" : "75F13AA22E3585E200B9B3DE",
+        "name" : "PostPiqueUITests"
+      }
+    },
+    {
       "target" : {
         "containerPath" : "container:PostPique.xcodeproj",
         "identifier" : "75F13A982E3585E200B9B3DE",

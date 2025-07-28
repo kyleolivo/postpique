@@ -49,6 +49,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		75723DC72E370EA600032840 /* PostPique.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PostPique.xctestplan; sourceTree = "<group>"; };
+		75723DC82E370F2D00032840 /* PostPiqueShareExtension.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PostPiqueShareExtension.xctestplan; sourceTree = "<group>"; };
 		75F13A8B2E3585E000B9B3DE /* PostPique.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostPique.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F13A992E3585E200B9B3DE /* PostPiqueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PostPiqueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F13AA32E3585E200B9B3DE /* PostPiqueUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PostPiqueUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -139,6 +141,8 @@
 		75F13A822E3585E000B9B3DE = {
 			isa = PBXGroup;
 			children = (
+				75723DC82E370F2D00032840 /* PostPiqueShareExtension.xctestplan */,
+				75723DC72E370EA600032840 /* PostPique.xctestplan */,
 				75F13A8D2E3585E000B9B3DE /* PostPique */,
 				75F13A9C2E3585E200B9B3DE /* PostPiqueTests */,
 				75F13AA62E3585E200B9B3DE /* PostPiqueUITests */,

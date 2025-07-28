@@ -19,7 +19,11 @@ struct ContentView: View {
                     UnauthenticatedView()
                 }
             }
-            .navigationBarHidden(true)
+            .navigationTitle("")
+            .navigationBarBackButtonHidden(true)
+#if os(iOS)
+            .navigationBarTitleDisplayMode(.never)
+#endif
             .alert("Authentication Error", isPresented: .constant(authManager.authError != nil)) {
                 Button("OK") {
                     authManager.authError = nil

@@ -6,7 +6,7 @@ class KeychainService {
     private let accessTokenKey = "github_access_token"
     private let userDataKey = "github_user"
     private let selectedRepoKey = "selected_repository"
-    private let appGroup = "group.com.postpique.shared"
+    private let appGroup = "group.com.kyleolivo.PostPique.shared"
     
     private init() {}
     

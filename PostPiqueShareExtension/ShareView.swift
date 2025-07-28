@@ -16,81 +16,184 @@ struct ShareView: View {
     private let githubAPI = GitHubAPIService.shared
     
     var body: some View {
-        VStack(spacing: 20) {
-            // Header
-            HStack {
-                Image(systemName: "quote.bubble.fill")
-                    .font(.title2)
-                    .foregroundColor(.orange)
-                
-                VStack(alignment: .leading) {
-                    Text("Save to PostPique")
-                        .font(.headline)
-                    Text(pageTitle.isEmpty ? "Loading..." : pageTitle)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
-                }
-                
-                Spacer()
-            }
-            .padding()
-            .background(.ultraThinMaterial)
-            .cornerRadius(12)
-            
-            // Quotation field
-            VStack(alignment: .leading, spacing: 8) {
-                Label("Quotation", systemImage: "text.quote")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                
-                TextEditor(text: $quotation)
-                    .font(.body)
-                    .frame(minHeight: 100)
-                    .padding(8)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(8)
-            }
-            
-            // Thoughts field
-            VStack(alignment: .leading, spacing: 8) {
-                Label("Your Thoughts", systemImage: "bubble.left")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                
-                TextEditor(text: $thoughts)
-                    .font(.body)
-                    .frame(minHeight: 100)
-                    .padding(8)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(8)
-            }
-            
-            Spacer()
-            
-            // Action buttons
-            HStack {
-                Button("Cancel") {
-                    onCancel()
-                }
-                .buttonStyle(.bordered)
-                
-                Spacer()
-                
-                Button(action: { Task { await postContent() } }) {
-                    if isPosting {
-                        ProgressView()
-                            .scaleEffect(0.8)
+        VStack(spacing: 0) {
+            // Beautiful header with gradient background
+            VStack(spacing: 16) {
+                HStack(spacing: 12) {
+                    if let appIcon = NSImage(named: "AppIcon") {
+                        Image(nsImage: appIcon)
+                            .resizable()
+                            .frame(width: 32, height: 32)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
                     } else {
-                        Text("Post to GitHub")
+                        Image(systemName: "quote.bubble.fill")
+                            .font(.system(size: 24, weight: .medium))
+                            .foregroundColor(.orange)
+                            .frame(width: 32, height: 32)
+                    }
+                    
+                    Text("PostPique")
+                        .font(.system(size: 18, weight: .semibold, design: .rounded))
+                        .foregroundColor(.primary)
+                    
+                    Spacer()
+                }
+            }
+            .padding(.horizontal, 28)
+            .padding(.top, 16)
+            .padding(.bottom, 24)
+            .background(
+                LinearGradient(
+                    colors: [Color(NSColor.controlBackgroundColor), Color(NSColor.windowBackgroundColor)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+            
+            // Main content area
+            VStack(spacing: 24) {
+                // Elegant quotation section
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Image(systemName: "quote.opening")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(.blue)
+                        
+                        Text("Quotation")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.primary)
+                        
+                        Spacer()
+                    }
+                    
+                    ZStack(alignment: .topLeading) {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(NSColor.controlBackgroundColor))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .strokeBorder(Color(NSColor.separatorColor).opacity(0.5), lineWidth: 1)
+                            )
+                            .frame(height: 85)
+                        
+                        TextEditor(text: $quotation)
+                            .font(.system(size: 13, design: .default))
+                            .padding(14)
+                            .frame(height: 85)
+                            .background(Color.clear)
+                            .scrollContentBackground(.hidden)
+                        
+                        if quotation.isEmpty {
+                            Text("Enter a meaningful quote from the article...")
+                                .font(.system(size: 13))
+                                .foregroundColor(Color(NSColor.placeholderTextColor))
+                                .padding(.top, 18)
+                                .padding(.leading, 18)
+                                .allowsHitTesting(false)
+                        }
                     }
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(thoughts.isEmpty || quotation.isEmpty || isPosting)
+                
+                // Elegant thoughts section
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Image(systemName: "lightbulb")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(.orange)
+                        
+                        Text("Your Thoughts")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.primary)
+                        
+                        Spacer()
+                    }
+                    
+                    ZStack(alignment: .topLeading) {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(NSColor.controlBackgroundColor))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .strokeBorder(Color(NSColor.separatorColor).opacity(0.5), lineWidth: 1)
+                            )
+                            .frame(height: 85)
+                        
+                        TextEditor(text: $thoughts)
+                            .font(.system(size: 13, design: .default))
+                            .padding(14)
+                            .frame(height: 85)
+                            .background(Color.clear)
+                            .scrollContentBackground(.hidden)
+                        
+                        if thoughts.isEmpty {
+                            Text("Share your insights and reflections...")
+                                .font(.system(size: 13))
+                                .foregroundColor(Color(NSColor.placeholderTextColor))
+                                .padding(.top, 18)
+                                .padding(.leading, 18)
+                                .allowsHitTesting(false)
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, 28)
+            .padding(.vertical, 24)
+            
+            // Beautiful button area
+            VStack(spacing: 0) {
+                Divider()
+                    .background(Color(NSColor.separatorColor).opacity(0.6))
+                
+                HStack(spacing: 12) {
+                    Spacer()
+                    
+                    Button("Cancel") {
+                        onCancel()
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                    .keyboardShortcut(.escape)
+                    
+                    if canPost {
+                        Button(action: { Task { await postContent() } }) {
+                            HStack(spacing: 8) {
+                                if isPosting {
+                                    ProgressView()
+                                        .controlSize(.small)
+                                        .scaleEffect(0.9)
+                                } else {
+                                    Image(systemName: "arrow.up.circle.fill")
+                                        .font(.system(size: 14, weight: .medium))
+                                }
+                                Text(isPosting ? "Posting..." : "Post")
+                                    .font(.system(size: 14, weight: .semibold))
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.large)
+                        .keyboardShortcut(.return)
+                    } else {
+                        Button(action: { Task { await postContent() } }) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "arrow.up.circle.fill")
+                                    .font(.system(size: 14, weight: .medium))
+                                Text("Post")
+                                    .font(.system(size: 14, weight: .semibold))
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.large)
+                        .disabled(true)
+                        .keyboardShortcut(.return)
+                    }
+                }
+                .padding(.horizontal, 28)
+                .padding(.top, 20)
+                .padding(.bottom, 12)
+                .background(Color(NSColor.controlBackgroundColor).opacity(0.3))
             }
         }
-        .padding()
-        .frame(width: 500, height: 520)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(NSColor.windowBackgroundColor))
         .onReceive(NotificationCenter.default.publisher(for: .shareDataReceived)) { notification in
             if let url = notification.userInfo?["url"] as? String {
                 sourceURL = url
@@ -110,6 +213,10 @@ struct ShareView: View {
         } message: {
             Text(errorMessage)
         }
+    }
+    
+    private var canPost: Bool {
+        !thoughts.isEmpty && !quotation.isEmpty && !isPosting
     }
     
     private func postContent() async {
@@ -146,34 +253,33 @@ struct ShareErrorView: View {
     let onClose: () -> Void
     
     var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 48))
-                .foregroundColor(.orange)
-            
-            Text("Repository Not Configured")
-                .font(.title2)
-                .bold()
-            
-            Text("Please open PostPique and select a repository before sharing content.")
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
+        VStack(spacing: 24) {
+            VStack(spacing: 16) {
+                Image(systemName: "exclamationmark.triangle")
+                    .font(.system(size: 48))
+                    .foregroundStyle(.orange)
+                
+                VStack(spacing: 8) {
+                    Text("Repository Not Configured")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.primary)
+                    
+                    Text("Please open PostPique and select a repository before sharing content.")
+                        .font(.system(size: 13))
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 20)
+                }
+            }
             
             Button("OK") {
                 onClose()
             }
             .buttonStyle(.borderedProminent)
+            .keyboardShortcut(.return)
         }
-        .padding(40)
-        .frame(width: 400, height: 300)
+        .padding(32)
+        .frame(width: 320, height: 220)
+        .background(Color(NSColor.windowBackgroundColor))
     }
-}
-
-#Preview {
-    ShareView(onPost: {}, onCancel: {})
-}
-
-#Preview("Error View") {
-    ShareErrorView(onClose: {})
 }

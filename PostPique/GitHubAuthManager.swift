@@ -30,7 +30,7 @@ class GitHubAuthManager: ObservableObject {
     // MARK: - Authentication Status
     func checkAuthenticationStatus() {
         do {
-            let token = try keychainService.getAccessToken()
+            _ = try keychainService.getAccessToken()
             isAuthenticated = true
             currentUser = keychainService.getUserData()
             selectedRepository = keychainService.getSelectedRepository()

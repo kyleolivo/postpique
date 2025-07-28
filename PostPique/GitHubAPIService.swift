@@ -68,7 +68,7 @@ class GitHubAPIService {
         let endpoint = "/repos/\(repository.fullName)/contents/\(path)"
         
         let fileContent: [String: Any] = [
-            "message": "Add new post: \(postContent.pageTitle)",
+            "message": "Add new post: \(postContent.truncatedTitle)",
             "content": Data(postContent.markdownContent.utf8).base64EncodedString(),
             "branch": repository.defaultBranch
         ]

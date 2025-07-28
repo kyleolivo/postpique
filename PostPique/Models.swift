@@ -8,8 +8,17 @@ struct PostContent: Codable {
     let timestamp: Date
     let sourceURL: String?
     
+    var truncatedTitle: String {
+        // Find the first non-alphanumeric character (like hyphen, dash, etc.)
+        if let range = pageTitle.range(of: "[^a-zA-Z0-9\\s]", options: .regularExpression) {
+            return String(pageTitle[..<range.lowerBound]).trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        return pageTitle
+    }
+    
     var markdownContent: String {
-        let titleWithEmoji = "🔗 \(pageTitle.replacingOccurrences(of: "\"", with: "\\\""))"
+        let cleanTitle = truncatedTitle.replacingOccurrences(of: "\"", with: "\\\"")
+        let titleWithEmoji = "🔗 \(cleanTitle)"
         
         var content = """
         ---
@@ -18,9 +27,9 @@ struct PostContent: Codable {
         tags:
           - quotes
         ---
-        > \(quotation)
-        
         \(thoughts)
+        
+        > \(quotation)
         """
         
         // Add link to original article if we have a source URL
@@ -35,7 +44,7 @@ struct PostContent: Codable {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let dateString = formatter.string(from: timestamp)
-        let safeTitle = pageTitle
+        let safeTitle = truncatedTitle
             .lowercased()
             .replacingOccurrences(of: " ", with: "-")
             .replacingOccurrences(of: "[^a-z0-9-]", with: "", options: .regularExpression)

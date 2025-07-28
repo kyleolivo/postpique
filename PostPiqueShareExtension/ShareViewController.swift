@@ -26,13 +26,18 @@ class ShareViewController: NSViewController {
         // Check if repository is configured before showing the share interface
         if keychainService.getSelectedRepository() != nil {
             setupShareView()
-            
-            // Delay content extraction to ensure ShareView is listening for notifications
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.extractSharedContent()
-            }
+            extractSharedContent()
         } else {
             setupErrorView()
+        }
+    }
+    
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        
+        // Re-extract content when view appears (handles reopen case)
+        if keychainService.getSelectedRepository() != nil {
+            extractSharedContent()
         }
     }
     
@@ -74,8 +79,13 @@ class ShareViewController: NSViewController {
     }
     
     private func extractSharedContent() {
-        guard let extensionContext = extensionContext,
-              let extensionItems = extensionContext.inputItems as? [NSExtensionItem] else {
+        guard let extensionContext = extensionContext else {
+            sendError("Extension context not available")
+            return
+        }
+        
+        guard let extensionItems = extensionContext.inputItems as? [NSExtensionItem],
+              !extensionItems.isEmpty else {
             sendError("No content to share")
             return
         }
@@ -84,39 +94,98 @@ class ShareViewController: NSViewController {
     }
     
     private func extractURL(from extensionItems: [NSExtensionItem]) {
+        var urlFound = false
+        
         for extensionItem in extensionItems {
-            guard let attachments = extensionItem.attachments else { continue }
+            guard let attachments = extensionItem.attachments, !attachments.isEmpty else { continue }
             
             for attachment in attachments {
+                // Try URL first
                 if attachment.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
-                    attachment.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { item, error in
-                        if let error = error {
-                            DispatchQueue.main.async {
+                    urlFound = true
+                    attachment.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { [weak self] item, error in
+                        guard let self = self else { return }
+                        
+                        DispatchQueue.main.async {
+                            if let error = error {
                                 self.sendError("Failed to extract URL: \(error.localizedDescription)")
+                                return
                             }
-                            return
-                        }
-                        
-                        guard let url = item as? URL else {
-                            DispatchQueue.main.async {
-                                self.sendError("Invalid URL format")
+                            
+                            // Handle different types of URL items
+                            var url: URL?
+                            
+                            if let directURL = item as? URL {
+                                url = directURL
+                            } else if let urlString = item as? String {
+                                url = URL(string: urlString)
+                            } else if let nsString = item as? NSString {
+                                url = URL(string: nsString as String)
+                            } else if let data = item as? Data {
+                                // Sometimes URLs come as data
+                                if let urlString = String(data: data, encoding: .utf8) {
+                                    url = URL(string: urlString.trimmingCharacters(in: .whitespacesAndNewlines))
+                                }
                             }
-                            return
-                        }
-                        
-                        Task {
-                            let title = await self.fetchPageTitle(from: url)
-                            DispatchQueue.main.async {
-                                self.sendContent(title: title, url: url.absoluteString)
+                            
+                            guard let finalURL = url else {
+                                self.sendError("Could not parse URL from shared content")
+                                return
+                            }
+                            
+                            Task {
+                                let title = await self.fetchPageTitle(from: finalURL)
+                                DispatchQueue.main.async {
+                                    self.sendContent(title: title, url: finalURL.absoluteString)
+                                }
                             }
                         }
-                        return
                     }
+                    return // Found URL, exit early
+                }
+                
+                // Fallback: try plain text that might contain a URL
+                if attachment.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
+                    urlFound = true
+                    attachment.loadItem(forTypeIdentifier: UTType.plainText.identifier, options: nil) { [weak self] item, error in
+                        guard let self = self else { return }
+                        
+                        DispatchQueue.main.async {
+                            if let error = error {
+                                self.sendError("Failed to extract text: \(error.localizedDescription)")
+                                return
+                            }
+                            
+                            var urlString: String?
+                            
+                            if let text = item as? String {
+                                urlString = text
+                            } else if let nsString = item as? NSString {
+                                urlString = nsString as String
+                            }
+                            
+                            guard let text = urlString,
+                                  let url = URL(string: text.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+                                self.sendError("No valid URL found in shared text")
+                                return
+                            }
+                            
+                            Task {
+                                let title = await self.fetchPageTitle(from: url)
+                                DispatchQueue.main.async {
+                                    self.sendContent(title: title, url: url.absoluteString)
+                                }
+                            }
+                        }
+                    }
+                    return // Found text, exit early
                 }
             }
         }
         
-        sendError("No URL found in shared content")
+        if !urlFound {
+            sendError("No URL found in shared content")
+        }
     }
     
     private func fetchPageTitle(from url: URL) async -> String {
@@ -151,6 +220,14 @@ class ShareViewController: NSViewController {
             .replacingOccurrences(of: "&gt;", with: ">")
             .replacingOccurrences(of: "&quot;", with: "\"")
             .replacingOccurrences(of: "&#39;", with: "'")
+            .replacingOccurrences(of: "&#8211;", with: "–")  // en dash
+            .replacingOccurrences(of: "&#8212;", with: "—")  // em dash
+            .replacingOccurrences(of: "&ndash;", with: "–")   // en dash
+            .replacingOccurrences(of: "&mdash;", with: "—")   // em dash
+            .replacingOccurrences(of: "&rsquo;", with: "\u{2019}")   // right single quote
+            .replacingOccurrences(of: "&lsquo;", with: "\u{2018}")   // left single quote
+            .replacingOccurrences(of: "&rdquo;", with: "\u{201D}")   // right double quote
+            .replacingOccurrences(of: "&ldquo;", with: "\u{201C}")   // left double quote
         
         return title.isEmpty ? "Untitled" : title
     }

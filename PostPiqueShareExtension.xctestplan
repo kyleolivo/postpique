@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "F6FCE7C7-5175-4800-AF11-3F84E10D3C33",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:PostPique.xcodeproj",
+      "identifier" : "75F13A8A2E3585E000B9B3DE",
+      "name" : "PostPique"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:PostPique.xcodeproj",
+        "identifier" : "75F13AA22E3585E200B9B3DE",
+        "name" : "PostPiqueUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

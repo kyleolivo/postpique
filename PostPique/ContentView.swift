@@ -22,7 +22,7 @@ struct ContentView: View {
             .navigationTitle("")
             .navigationBarBackButtonHidden(true)
 #if os(iOS)
-            .navigationBarTitleDisplayMode(.never)
+            .navigationBarTitleDisplayMode(.inline)
 #endif
             .alert("Authentication Error", isPresented: .constant(authManager.authError != nil)) {
                 Button("OK") {

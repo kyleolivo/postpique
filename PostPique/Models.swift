@@ -115,7 +115,7 @@ struct DeviceCodeResponse: Codable {
 }
 
 // MARK: - API Errors
-enum PostPiqueError: Error, LocalizedError {
+enum PostPiqueError: Error, LocalizedError, Equatable {
     case noAccessToken
     case invalidURL
     case requestFailed(String)

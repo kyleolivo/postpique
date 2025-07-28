@@ -19,7 +19,7 @@ struct ContentView: View {
                     UnauthenticatedView()
                 }
             }
-            .navigationTitle("PostPique")
+            .navigationBarHidden(true)
             .alert("Authentication Error", isPresented: .constant(authManager.authError != nil)) {
                 Button("OK") {
                     authManager.authError = nil
@@ -71,17 +71,29 @@ struct UnauthenticatedView: View {
                             .frame(width: 96, height: 96)
                     }
 #else
-                    if let appIcon = UIImage(named: "AppIcon") {
+                    // On iOS, try multiple approaches to load the app icon
+                    if let appIcon = UIImage(named: "AppIcon60x60") ?? UIImage(named: "AppIcon") {
                         Image(uiImage: appIcon)
                             .resizable()
                             .frame(width: 96, height: 96)
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                             .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
                     } else {
-                        Image(systemName: "app.fill")
-                            .font(.system(size: 96))
-                            .foregroundColor(.blue)
-                            .frame(width: 96, height: 96)
+                        // Create a placeholder app icon that looks like the real one
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(LinearGradient(
+                                    colors: [Color.orange.opacity(0.8), Color.orange],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ))
+                                .frame(width: 96, height: 96)
+                            
+                            Image(systemName: "quote.bubble.fill")
+                                .font(.system(size: 40, weight: .medium))
+                                .foregroundColor(.white)
+                        }
+                        .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
                     }
 #endif
                 }

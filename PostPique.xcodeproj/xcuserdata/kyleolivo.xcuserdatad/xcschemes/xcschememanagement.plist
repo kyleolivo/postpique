@@ -7,16 +7,41 @@
 		<key>PostPique.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<key>PostPiqueShareExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>PostPiqueTests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>PostPiqueUITests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>75F13A8A2E3585E000B9B3DE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>75F13A982E3585E200B9B3DE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>75F13AA22E3585E200B9B3DE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>75F13AC32E35890F00B9B3DE</key>
 		<dict>
 			<key>primary</key>

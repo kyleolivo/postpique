@@ -137,19 +137,6 @@ struct ShareView: View {
                             .frame(height: 85)
                             .background(Color.clear)
                             .scrollContentBackground(.hidden)
-                        
-                        if quotation.isEmpty {
-                            Text("Enter a meaningful quote from the article...")
-                                .font(.system(size: 13))
-#if os(macOS)
-                                .foregroundColor(Color(NSColor.placeholderTextColor))
-#else
-                                .foregroundColor(Color(UIColor.placeholderText))
-#endif
-                                .padding(.top, 18)
-                                .padding(.leading, 18)
-                                .allowsHitTesting(false)
-                        }
                     }
                 }
                 
@@ -190,19 +177,6 @@ struct ShareView: View {
                             .frame(height: 85)
                             .background(Color.clear)
                             .scrollContentBackground(.hidden)
-                        
-                        if thoughts.isEmpty {
-                            Text("Share your insights and reflections...")
-                                .font(.system(size: 13))
-#if os(macOS)
-                                .foregroundColor(Color(NSColor.placeholderTextColor))
-#else
-                                .foregroundColor(Color(UIColor.placeholderText))
-#endif
-                                .padding(.top, 18)
-                                .padding(.leading, 18)
-                                .allowsHitTesting(false)
-                        }
                     }
                 }
                 

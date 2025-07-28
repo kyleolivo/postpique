@@ -26,23 +26,52 @@ struct ShareView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Beautiful header with gradient background
+#if os(iOS)
+            // Simple top navigation for iOS
+            HStack {
+                Button("Cancel") {
+                    onCancel()
+                }
+                .font(.system(size: 17))
+                .foregroundColor(.blue)
+                
+                Spacer()
+                
+                Image(systemName: "quote.bubble.fill")
+                    .font(.system(size: 20))
+                    .foregroundColor(.orange)
+                
+                Spacer()
+                
+                if canPost {
+                    Button(action: { Task { await postContent() } }) {
+                        Text(isPosting ? "Posting..." : "Post")
+                    }
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(.blue)
+                    .disabled(isPosting)
+                } else {
+                    Button("Post") {
+                        // Disabled state
+                    }
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(.gray)
+                    .disabled(true)
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .background(Color.white)
+#else
+            // Keep original header for macOS
             VStack(spacing: 16) {
                 HStack(spacing: 12) {
                     if let appIcon = PlatformImage(named: "AppIcon") {
-#if os(macOS)
                         Image(nsImage: appIcon)
                             .resizable()
                             .frame(width: 32, height: 32)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
-#else
-                        Image(uiImage: appIcon)
-                            .resizable()
-                            .frame(width: 32, height: 32)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
-#endif
                     } else {
                         Image(systemName: "quote.bubble.fill")
                             .font(.system(size: 24, weight: .medium))
@@ -60,7 +89,6 @@ struct ShareView: View {
             .padding(.horizontal, 28)
             .padding(.top, 16)
             .padding(.bottom, 24)
-#if os(macOS)
             .background(
                 LinearGradient(
                     colors: [Color(NSColor.controlBackgroundColor), Color(NSColor.windowBackgroundColor)],
@@ -68,18 +96,10 @@ struct ShareView: View {
                     endPoint: .bottom
                 )
             )
-#else
-            .background(
-                LinearGradient(
-                    colors: [Color(UIColor.systemGray6), Color(UIColor.systemBackground)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
 #endif
             
             // Main content area
-            VStack(spacing: 24) {
+            VStack(alignment: .leading, spacing: 24) {
                 // Elegant quotation section
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
@@ -185,18 +205,24 @@ struct ShareView: View {
                         }
                     }
                 }
+                
+#if os(iOS)
+                Spacer()
+#endif
             }
             .padding(.horizontal, 28)
+#if os(iOS)
+            .padding(.top, 20)
+            .padding(.bottom, 40)
+#else
             .padding(.vertical, 24)
+#endif
             
-            // Beautiful button area
+#if os(macOS)
+            // Beautiful button area for macOS only
             VStack(spacing: 0) {
                 Divider()
-#if os(macOS)
                     .background(Color(NSColor.separatorColor).opacity(0.6))
-#else
-                    .background(Color(UIColor.separator).opacity(0.6))
-#endif
                 
                 HStack(spacing: 12) {
                     Spacer()
@@ -244,18 +270,15 @@ struct ShareView: View {
                 .padding(.horizontal, 28)
                 .padding(.top, 20)
                 .padding(.bottom, 12)
-#if os(macOS)
                 .background(Color(NSColor.controlBackgroundColor).opacity(0.3))
-#else
-                .background(Color(UIColor.systemGray6).opacity(0.3))
-#endif
             }
+#endif
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
 #if os(macOS)
         .background(Color(NSColor.windowBackgroundColor))
 #else
-        .background(Color(UIColor.systemBackground))
+        .background(Color.white)
 #endif
         .onReceive(NotificationCenter.default.publisher(for: .shareDataReceived)) { notification in
             if let url = notification.userInfo?["url"] as? String {

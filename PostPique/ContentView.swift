@@ -30,7 +30,12 @@ struct ContentView: View {
                 }
             }
         }
+#if os(macOS)
         .frame(width: 480, height: 620)
+#else
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 20)
+#endif
     }
 }
 
@@ -54,7 +59,7 @@ struct UnauthenticatedView: View {
         VStack(spacing: 0) {
             Spacer()
             
-            VStack(spacing: 24) {
+            VStack(spacing: 20) {
                 // App Icon with background
                 VStack(spacing: 0) {
 #if os(macOS)
@@ -75,39 +80,47 @@ struct UnauthenticatedView: View {
                     if let appIcon = UIImage(named: "AppIcon60x60") ?? UIImage(named: "AppIcon") {
                         Image(uiImage: appIcon)
                             .resizable()
-                            .frame(width: 96, height: 96)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                            .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
+                            .frame(width: 80, height: 80)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .shadow(color: Color.black.opacity(0.15), radius: 6, x: 0, y: 3)
                     } else {
                         // Create a placeholder app icon that looks like the real one
                         ZStack {
-                            RoundedRectangle(cornerRadius: 20)
+                            RoundedRectangle(cornerRadius: 16)
                                 .fill(LinearGradient(
                                     colors: [Color.orange.opacity(0.8), Color.orange],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 ))
-                                .frame(width: 96, height: 96)
+                                .frame(width: 80, height: 80)
                             
                             Image(systemName: "quote.bubble.fill")
-                                .font(.system(size: 40, weight: .medium))
+                                .font(.system(size: 32, weight: .medium))
                                 .foregroundColor(.white)
                         }
-                        .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
+                        .shadow(color: Color.black.opacity(0.15), radius: 6, x: 0, y: 3)
                     }
 #endif
                 }
                 .padding(.bottom, 8)
                 
                 // Title and description
-                VStack(spacing: 12) {
+                VStack(spacing: 10) {
                     Text("Welcome to PostPique")
+#if os(iOS)
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+#else
                         .font(.system(size: 28, weight: .bold, design: .rounded))
+#endif
                         .foregroundStyle(.primary)
                         .multilineTextAlignment(.center)
                     
                     Text("Share quotes and thoughts\ndirectly to your GitHub Pages")
+#if os(iOS)
+                        .font(.system(size: 15))
+#else
                         .font(.system(size: 16))
+#endif
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                         .lineSpacing(2)
@@ -115,10 +128,9 @@ struct UnauthenticatedView: View {
             }
             
             Spacer()
-            Spacer()
             
             // Sign in button
-            VStack(spacing: 16) {
+            VStack(spacing: 12) {
                 Button {
                     Task {
                         await authManager.authenticateWithDeviceFlow()
@@ -131,7 +143,11 @@ struct UnauthenticatedView: View {
                             .font(.system(size: 16, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
+#if os(iOS)
+                    .padding(.vertical, 14)
+#else
                     .padding(.vertical, 16)
+#endif
                     .background(
                         RoundedRectangle(cornerRadius: 12)
                             .fill(.blue.gradient)
@@ -196,7 +212,11 @@ struct AuthenticatedView: View {
             // Header with user profile
             if let user = authManager.currentUser {
                 UserProfileView(user: user)
+#if os(iOS)
+                    .padding(.horizontal, 32)
+#else
                     .padding(.horizontal, 24)
+#endif
                     .padding(.top, 20)
                     .padding(.bottom, 12)
             }
@@ -207,11 +227,19 @@ struct AuthenticatedView: View {
                     selectedRepository: authManager.selectedRepository,
                     showingPicker: $showingRepositoryPicker
                 )
+#if os(iOS)
+                .padding(.horizontal, 32)
+#else
                 .padding(.horizontal, 24)
+#endif
                 
                 // Instructions Section
                 InstructionsView()
+#if os(iOS)
+                    .padding(.horizontal, 32)
+#else
                     .padding(.horizontal, 24)
+#endif
                 
                 Spacer()
             }
@@ -252,7 +280,11 @@ struct UserProfileView: View {
                 Circle()
                     .fill(.quaternary)
             }
+#if os(iOS)
+            .frame(width: 44, height: 44)
+#else
             .frame(width: 52, height: 52)
+#endif
             .clipShape(Circle())
             .overlay(
                 Circle()
@@ -260,30 +292,55 @@ struct UserProfileView: View {
             )
             .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 1)
             
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(user.name ?? user.login)
+#if os(iOS)
+                    .font(.system(size: 16, weight: .semibold))
+#else
                     .font(.system(size: 18, weight: .semibold))
+#endif
                     .foregroundStyle(.primary)
+                    .lineLimit(1)
                 Text("@\(user.login)")
+#if os(iOS)
+                    .font(.system(size: 12, weight: .medium))
+#else
                     .font(.system(size: 14, weight: .medium))
+#endif
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
                 if let email = user.email {
                     Text(email)
+#if os(iOS)
+                        .font(.system(size: 10))
+#else
                         .font(.system(size: 12))
+#endif
                         .foregroundStyle(.tertiary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
                 }
             }
             
             Spacer()
             
             // Status indicator
-            HStack(spacing: 6) {
+            VStack(spacing: 4) {
                 Circle()
                     .fill(.green)
+#if os(iOS)
+                    .frame(width: 6, height: 6)
+#else
                     .frame(width: 8, height: 8)
+#endif
                 Text("Connected")
+#if os(iOS)
+                    .font(.system(size: 10, weight: .medium))
+#else
                     .font(.system(size: 12, weight: .medium))
+#endif
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
         }
         .padding(.vertical, 16)
@@ -318,8 +375,14 @@ struct RepositorySelectionView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack(spacing: 8) {
                             Text(repo.name)
+#if os(iOS)
+                                .font(.system(size: 15, weight: .semibold))
+#else
                                 .font(.system(size: 16, weight: .semibold))
+#endif
                                 .foregroundStyle(.primary)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
                             
                             if repo.isPrivate {
                                 Image(systemName: "lock.fill")
@@ -329,8 +392,13 @@ struct RepositorySelectionView: View {
                         }
                         
                         Text(repo.owner.login)
+#if os(iOS)
+                            .font(.system(size: 13))
+#else
                             .font(.system(size: 14))
+#endif
                             .foregroundStyle(.secondary)
+                            .lineLimit(1)
                     }
                     
                     Spacer()
@@ -338,9 +406,15 @@ struct RepositorySelectionView: View {
                     Button("Change") {
                         showingPicker = true
                     }
+#if os(iOS)
+                    .font(.system(size: 13, weight: .medium))
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 6)
+#else
                     .font(.system(size: 14, weight: .medium))
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
+#endif
                     .background(.blue.opacity(0.1))
                     .foregroundStyle(.blue)
                     .clipShape(RoundedRectangle(cornerRadius: 8))

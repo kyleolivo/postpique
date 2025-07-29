@@ -58,6 +58,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		755CA4962E38612D00572DFA /* Exceptions for "PostPique" folder in "PostPique" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 75F13A8A2E3585E000B9B3DE /* PostPique */;
+		};
 		75F13ACF2E35891000B9B3DE /* Exceptions for "PostPiqueShareExtension" folder in "PostPiqueShareExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -81,6 +88,7 @@
 		75F13A8D2E3585E000B9B3DE /* PostPique */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				755CA4962E38612D00572DFA /* Exceptions for "PostPique" folder in "PostPique" target */,
 				75F13ADA2E358A2700B9B3DE /* Exceptions for "PostPique" folder in "PostPiqueShareExtension" target */,
 			);
 			path = PostPique;
@@ -499,7 +507,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PostPique/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PostPique;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -542,7 +552,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PostPique/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PostPique;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

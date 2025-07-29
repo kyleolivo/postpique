@@ -121,7 +121,6 @@ class ShareViewController: PlatformViewController {
         // Check if this is a proper URL share from Safari's share button
         // Safari provides URLs with specific type identifiers when sharing from the share button
         var hasURLAttachment = false
-        var hasOnlyPlainText = true
         
         for extensionItem in extensionItems {
             guard let attachments = extensionItem.attachments, !attachments.isEmpty else { continue }
@@ -129,7 +128,6 @@ class ShareViewController: PlatformViewController {
             for attachment in attachments {
                 if attachment.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
                     hasURLAttachment = true
-                    hasOnlyPlainText = false
                     break
                 }
             }

@@ -20,9 +20,14 @@ struct PostContent: Codable {
         let cleanTitle = truncatedTitle.replacingOccurrences(of: "\"", with: "\\\"")
         let titleWithEmoji = "🔗 \(cleanTitle)"
         
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        let dateString = formatter.string(from: timestamp)
+        
         var content = """
         ---
         title: "\(titleWithEmoji)"
+        date: \(dateString)
         excerpt_separator: "<!--more-->"
         tags:
           - quotes

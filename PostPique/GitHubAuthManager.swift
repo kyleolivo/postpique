@@ -68,9 +68,25 @@ class GitHubAuthManager: ObservableObject {
             )
             
         } catch {
-            authError = error.localizedDescription
-            isAuthenticating = false
-            userCode = nil
+            // Don't show error if user cancelled
+            let errorString = error.localizedDescription.lowercased()
+            if error is CancellationError || errorString.contains("cancel") {
+                // User cancelled, just reset state
+                isAuthenticating = false
+                userCode = nil
+                authError = nil
+            } else {
+                // Provide more user-friendly error messages
+                if errorString.contains("network") || errorString.contains("internet") {
+                    authError = "Network connection error. Please check your internet connection."
+                } else if errorString.contains("timeout") {
+                    authError = "Request timed out. Please try again."
+                } else {
+                    authError = "Authentication failed. Please try again."
+                }
+                isAuthenticating = false
+                userCode = nil
+            }
         }
     }
     
@@ -137,10 +153,21 @@ class GitHubAuthManager: ObservableObject {
                         return
                     }
                 } catch {
-                    await MainActor.run {
-                        self.authError = error.localizedDescription
-                        self.isAuthenticating = false
-                        self.userCode = nil
+                    // Don't show error if task was cancelled
+                    let errorString = error.localizedDescription.lowercased()
+                    if !(error is CancellationError) && !errorString.contains("cancel") {
+                        await MainActor.run {
+                            // Provide more user-friendly error messages
+                            if errorString.contains("network") || errorString.contains("internet") {
+                                self.authError = "Network connection error. Please check your internet connection."
+                            } else if errorString.contains("timeout") {
+                                self.authError = "Request timed out. Please try again."
+                            } else {
+                                self.authError = "Authentication failed. Please try again."
+                            }
+                            self.isAuthenticating = false
+                            self.userCode = nil
+                        }
                     }
                     return
                 }

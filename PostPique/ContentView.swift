@@ -35,7 +35,7 @@ struct ContentView: View {
             }
         }
 #if os(macOS)
-        .frame(width: 480, height: 620)
+        .frame(width: 480, height: 680)
 #else
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal, 20)
@@ -284,6 +284,9 @@ struct AuthenticatedView: View {
         }
         .sheet(isPresented: $showingDonation) {
             DonationView()
+#if os(macOS)
+                .frame(width: 480, height: 620)
+#endif
         }
         .task {
             await authManager.loadRepositories()

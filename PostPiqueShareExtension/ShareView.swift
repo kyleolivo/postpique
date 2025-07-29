@@ -378,8 +378,8 @@ struct TextSelectionErrorView: View {
             .buttonStyle(.borderedProminent)
             .keyboardShortcut(.return)
         }
-        .padding(32)
-        .frame(width: 360, height: 260)
+        .padding(40)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
 #if os(macOS)
         .background(Color(NSColor.windowBackgroundColor))
 #else

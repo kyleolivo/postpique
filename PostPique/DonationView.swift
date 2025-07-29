@@ -5,7 +5,7 @@ struct DonationView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var products: [Product] = []
     @State private var purchaseError: String?
-    @State private var isPurchasing = false
+    @State private var purchasingProductID: String?
     
     let productIDs = [
         "com.kyleolivo.PostPique.tip.small",
@@ -78,9 +78,10 @@ struct DonationView: View {
                                 ForEach(products) { product in
                                     TipButton(
                                         product: product,
-                                        isPurchasing: isPurchasing,
+                                        isPurchasing: purchasingProductID == product.id,
                                         onPurchase: { purchase(product) }
                                     )
+                                    .frame(maxWidth: .infinity)
                                     
                                     if product.id != products.last?.id {
                                         Divider()
@@ -123,7 +124,7 @@ struct DonationView: View {
     
     func purchase(_ product: Product) {
         Task {
-            isPurchasing = true
+            purchasingProductID = product.id
             purchaseError = nil
             
             do {
@@ -149,7 +150,7 @@ struct DonationView: View {
                 purchaseError = error.localizedDescription
             }
             
-            isPurchasing = false
+            purchasingProductID = nil
         }
     }
 }
@@ -200,10 +201,12 @@ struct TipButton: View {
                 if isPurchasing {
                     ProgressView()
                         .scaleEffect(0.8)
+                        .frame(width: 50, alignment: .trailing)
                 } else {
                     Text(product.displayPrice)
                         .foregroundColor(.gray)
                         .font(.body)
+                        .frame(width: 50, alignment: .trailing)
                 }
             }
             .padding(.horizontal, 20)

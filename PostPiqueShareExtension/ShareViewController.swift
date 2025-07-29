@@ -45,26 +45,12 @@ class ShareViewController: PlatformViewController {
 #if os(macOS)
     override func viewDidAppear() {
         super.viewDidAppear()
-        
-        // Re-extract content when view appears (handles reopen case)
-        if keychainService.getSelectedRepository() != nil {
-            // Only extract if we already have the share view setup
-            if children.first?.view.superview != nil {
-                extractSharedContent()
-            }
-        }
+        // Don't re-extract content on macOS - it's already handled in viewDidLoad
     }
 #else
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        // Re-extract content when view appears (handles reopen case)
-        if keychainService.getSelectedRepository() != nil {
-            // Only extract if we already have the share view setup
-            if children.first?.view.superview != nil {
-                extractSharedContent()
-            }
-        }
+        // Don't re-extract content on iOS - it's already handled in viewDidLoad
     }
 #endif
     
@@ -132,34 +118,31 @@ class ShareViewController: PlatformViewController {
             return
         }
         
-        // Check if this is a URL share or text selection
-        var hasURL = false
-        var hasOnlyText = false
+        // Check if this is a proper URL share from Safari's share button
+        // Safari provides URLs with specific type identifiers when sharing from the share button
+        var hasURLAttachment = false
+        var hasOnlyPlainText = true
         
         for extensionItem in extensionItems {
             guard let attachments = extensionItem.attachments, !attachments.isEmpty else { continue }
             
             for attachment in attachments {
                 if attachment.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
-                    hasURL = true
+                    hasURLAttachment = true
+                    hasOnlyPlainText = false
                     break
-                } else if attachment.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
-                    hasOnlyText = true
                 }
             }
-            if hasURL { break }
+            if hasURLAttachment { break }
         }
         
-        if hasURL {
+        if hasURLAttachment {
             // This is a URL share, proceed normally
             setupShareView()
             extractSharedContent()
-        } else if hasOnlyText {
-            // This is text selection, show error
-            setupTextSelectionErrorView()
         } else {
-            setupShareView()
-            sendError("No shareable content found")
+            // This is likely text selection, show error
+            setupTextSelectionErrorView()
         }
     }
     

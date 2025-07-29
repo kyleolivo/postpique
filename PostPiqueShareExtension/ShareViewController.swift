@@ -35,8 +35,8 @@ class ShareViewController: PlatformViewController {
         
         // Check if repository is configured before showing the share interface
         if keychainService.getSelectedRepository() != nil {
-            setupShareView()
-            extractSharedContent()
+            // Check content type before showing share view
+            checkContentType()
         } else {
             setupErrorView()
         }
@@ -48,7 +48,10 @@ class ShareViewController: PlatformViewController {
         
         // Re-extract content when view appears (handles reopen case)
         if keychainService.getSelectedRepository() != nil {
-            extractSharedContent()
+            // Only extract if we already have the share view setup
+            if children.first?.view.superview != nil {
+                extractSharedContent()
+            }
         }
     }
 #else
@@ -57,7 +60,10 @@ class ShareViewController: PlatformViewController {
         
         // Re-extract content when view appears (handles reopen case)
         if keychainService.getSelectedRepository() != nil {
-            extractSharedContent()
+            // Only extract if we already have the share view setup
+            if children.first?.view.superview != nil {
+                extractSharedContent()
+            }
         }
     }
 #endif
@@ -84,6 +90,14 @@ class ShareViewController: PlatformViewController {
         setupHostingController(with: errorView)
     }
     
+    private func setupTextSelectionErrorView() {
+        let errorView = TextSelectionErrorView {
+            self.cancelRequest()
+        }
+        
+        setupHostingController(with: errorView)
+    }
+    
     private func setupHostingController<T: View>(with view: T) {
         let hostingController = PlatformHostingController(rootView: view)
         
@@ -102,6 +116,51 @@ class ShareViewController: PlatformViewController {
         hostingController.view.frame = self.view.bounds
         hostingController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 #endif
+    }
+    
+    private func checkContentType() {
+        guard let extensionContext = extensionContext else {
+            setupShareView()
+            sendError("Extension context not available")
+            return
+        }
+        
+        guard let extensionItems = extensionContext.inputItems as? [NSExtensionItem],
+              !extensionItems.isEmpty else {
+            setupShareView()
+            sendError("No content to share")
+            return
+        }
+        
+        // Check if this is a URL share or text selection
+        var hasURL = false
+        var hasOnlyText = false
+        
+        for extensionItem in extensionItems {
+            guard let attachments = extensionItem.attachments, !attachments.isEmpty else { continue }
+            
+            for attachment in attachments {
+                if attachment.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
+                    hasURL = true
+                    break
+                } else if attachment.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
+                    hasOnlyText = true
+                }
+            }
+            if hasURL { break }
+        }
+        
+        if hasURL {
+            // This is a URL share, proceed normally
+            setupShareView()
+            extractSharedContent()
+        } else if hasOnlyText {
+            // This is text selection, show error
+            setupTextSelectionErrorView()
+        } else {
+            setupShareView()
+            sendError("No shareable content found")
+        }
     }
     
     private func extractSharedContent() {
@@ -190,9 +249,15 @@ class ShareViewController: PlatformViewController {
                                 urlString = nsString as String
                             }
                             
-                            guard let text = urlString,
-                                  let url = URL(string: text.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-                                self.sendError("No valid URL found in shared text")
+                            guard let text = urlString else {
+                                self.sendError("No text found in shared content")
+                                return
+                            }
+                            
+                            let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                            guard let url = URL(string: trimmedText) else {
+                                // User likely selected text instead of sharing the webpage
+                                self.sendError("To share a webpage, please use Safari's share button from the webpage itself, not from selected text.")
                                 return
                             }
                             

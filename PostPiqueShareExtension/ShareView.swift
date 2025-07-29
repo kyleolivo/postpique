@@ -347,3 +347,43 @@ struct ShareErrorView: View {
 #endif
     }
 }
+
+struct TextSelectionErrorView: View {
+    let onClose: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            VStack(spacing: 16) {
+                Image(systemName: "safari")
+                    .font(.system(size: 48))
+                    .foregroundStyle(.blue)
+                
+                VStack(spacing: 8) {
+                    Text("Share from Webpage")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.primary)
+                    
+                    Text("To share a webpage, please use Safari's share button from the webpage itself, not from selected text.")
+                        .font(.system(size: 13))
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, 20)
+                }
+            }
+            
+            Button("OK") {
+                onClose()
+            }
+            .buttonStyle(.borderedProminent)
+            .keyboardShortcut(.return)
+        }
+        .padding(32)
+        .frame(width: 360, height: 260)
+#if os(macOS)
+        .background(Color(NSColor.windowBackgroundColor))
+#else
+        .background(Color(UIColor.systemBackground))
+#endif
+    }
+}

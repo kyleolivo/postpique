@@ -1,8 +1,9 @@
 import Foundation
 import SwiftUI
+import AuthenticationServices
 
 @MainActor
-class GitHubAuthManager: ObservableObject {
+class GitHubAuthManager: NSObject, ObservableObject {
     static let shared = GitHubAuthManager()
     
     @Published var isAuthenticated = false
@@ -12,18 +13,19 @@ class GitHubAuthManager: ObservableObject {
     @Published var isLoadingRepositories = false
     @Published var isAuthenticating = false
     @Published var authError: String?
-    
-    // Device flow specific properties
     @Published var userCode: String?
+    @Published var showWebSession = false
     
-    // OAuth App Client ID with Device Flow enabled
+    // OAuth App Client ID
     private let clientID = "Ov23liBHg4b3h8St9NLy"
     
     private let keychainService = KeychainService.shared
     private let apiService = GitHubAPIService.shared
+    private var webAuthSession: ASWebAuthenticationSession?
     private var pollTask: Task<Void, Error>?
     
-    private init() {
+    private override init() {
+        super.init()
         checkAuthenticationStatus()
     }
     
@@ -41,7 +43,7 @@ class GitHubAuthManager: ObservableObject {
         }
     }
     
-    // MARK: - Device Flow Authentication
+    // MARK: - Device Flow Authentication with ASWebAuthenticationSession
     func authenticateWithDeviceFlow() async {
         isAuthenticating = true
         authError = nil
@@ -52,14 +54,8 @@ class GitHubAuthManager: ObservableObject {
             
             userCode = deviceCodeResponse.userCode
             
-            // Step 2: Open browser for user to enter code
-            if let url = URL(string: deviceCodeResponse.verificationURI) {
-                #if os(iOS)
-                await UIApplication.shared.open(url)
-                #else
-                NSWorkspace.shared.open(url)
-                #endif
-            }
+            // Step 2: Don't open web session yet - let user see the code first
+            // The web session will be opened when user taps "Continue"
             
             // Step 3: Poll for access token
             try await pollForAccessToken(
@@ -86,6 +82,46 @@ class GitHubAuthManager: ObservableObject {
                 }
                 isAuthenticating = false
                 userCode = nil
+            }
+        }
+    }
+    
+    private func openDeviceCodePage(verificationURI: String) async {
+        guard let url = URL(string: verificationURI) else { return }
+        
+        // Cancel any existing session first
+        webAuthSession?.cancel()
+        webAuthSession = nil
+        
+        await MainActor.run {
+            webAuthSession = ASWebAuthenticationSession(
+                url: url,
+                callbackURLScheme: "postpique"
+            ) { [weak self] callbackURL, error in
+                Task { @MainActor in
+                    // For device flow, we don't need the callback URL
+                    // The user just needs to enter the code in the web view
+                    if let error = error {
+                        if (error as NSError).code == ASWebAuthenticationSessionError.canceledLogin.rawValue {
+                            // User cancelled, stop polling
+                            self?.pollTask?.cancel()
+                        }
+                    }
+                }
+            }
+            
+            webAuthSession?.presentationContextProvider = self
+            webAuthSession?.prefersEphemeralWebBrowserSession = true
+            
+            guard let session = webAuthSession else {
+                self.authError = "Failed to create authentication session"
+                self.isAuthenticating = false
+                return
+            }
+            
+            if !session.start() {
+                self.authError = "Failed to start authentication"
+                self.isAuthenticating = false
             }
         }
     }
@@ -246,6 +282,8 @@ class GitHubAuthManager: ObservableObject {
     // MARK: - Sign Out
     func signOut() {
         pollTask?.cancel()
+        webAuthSession?.cancel()
+        webAuthSession = nil
         keychainService.clearAllData()
         isAuthenticated = false
         currentUser = nil
@@ -253,12 +291,45 @@ class GitHubAuthManager: ObservableObject {
         repositories = []
         isLoadingRepositories = false
         userCode = nil
+        authError = nil
     }
     
     // MARK: - Cancel Authentication
     func cancelAuthentication() {
         pollTask?.cancel()
+        webAuthSession?.cancel()
+        webAuthSession = nil
         isAuthenticating = false
         userCode = nil
+        authError = nil
+        showWebSession = false
+    }
+    
+    func openWebSession() async {
+        guard userCode != nil else { return }
+        
+        // Get the verification URI from the device code response
+        let verificationURI = "https://github.com/login/device"
+        
+        await openDeviceCodePage(verificationURI: verificationURI)
+        showWebSession = true
+    }
+}
+
+// MARK: - ASWebAuthenticationPresentationContextProviding
+extension GitHubAuthManager: ASWebAuthenticationPresentationContextProviding {
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        #if os(iOS)
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else {
+            fatalError("No window available for authentication")
+        }
+        return window
+        #else
+        guard let window = NSApplication.shared.windows.first else {
+            fatalError("No window available for authentication")
+        }
+        return window
+        #endif
     }
 }

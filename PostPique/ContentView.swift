@@ -190,16 +190,33 @@ struct UnauthenticatedView: View {
                         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
                         .textSelection(.enabled)
                     
-                    Text("Waiting for authorization...")
+                    Text("Copy this code, then tap Continue to open GitHub")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                 }
                 
-                Button("Cancel") {
-                    authManager.cancelAuthentication()
+                HStack(spacing: 16) {
+                    Button("Continue") {
+                        Task {
+                            await authManager.openWebSession()
+                        }
+                    }
+                    .font(.body)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .background(.blue)
+                    .cornerRadius(8)
+                    
+                    Button("Cancel") {
+                        authManager.cancelAuthentication()
+                    }
+                    .font(.body)
+                    .foregroundStyle(.red)
                 }
-                .font(.body)
-                .foregroundStyle(.red)
+                
+
             }
         } else {
             ProgressView("Starting authentication...")

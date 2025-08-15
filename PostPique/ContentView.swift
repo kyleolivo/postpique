@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Foundation
 
 struct ContentView: View {
     @EnvironmentObject var authManager: GitHubAuthManager
@@ -174,49 +175,155 @@ struct UnauthenticatedView: View {
     @ViewBuilder
     private func AuthenticatingView() -> some View {
         if let userCode = authManager.userCode {
-            VStack(spacing: 20) {
+            VStack(spacing: 24) {
+                // Header
+                Text("Authenticate with GitHub")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.primary)
+                
                 VStack(spacing: 16) {
-                    ProgressView()
-                        .scaleEffect(1.2)
+                    // Instructions section
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("What to expect:")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.primary)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(alignment: .top, spacing: 8) {
+                                Text("1.")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: 20, alignment: .leading)
+                                Text("Write down or save the device code below somewhere (an Apple Note, perhaps?)")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                            
+                            HStack(alignment: .top, spacing: 8) {
+                                Text("2.")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: 20, alignment: .leading)
+                                Text("Once you tap Continue, you'll need to log in to GitHub")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                            
+                            HStack(alignment: .top, spacing: 8) {
+                                Text("3.")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: 20, alignment: .leading)
+                                Text("If logging in from a new device, you may be prompted for an authentication code, which you will find in your email")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                            
+                            HStack(alignment: .top, spacing: 8) {
+                                Text("4.")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: 20, alignment: .leading)
+                                Text("Finally, you'll be prompted for the device code below")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(.ultraThinMaterial.opacity(0.5), in: RoundedRectangle(cornerRadius: 8))
                     
-                    Text("Enter this code on GitHub:")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                    
-                    Text(userCode)
-                        .font(.system(size: 28, weight: .bold, design: .monospaced))
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
-                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-                        .textSelection(.enabled)
-                    
-                    Text("Copy this code, then tap Continue to open GitHub")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
+                    // Device code with copy indicator
+                    VStack(spacing: 8) {
+                        Text("Device Code")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.secondary)
+                        
+                        HStack(spacing: 12) {
+                            Text(userCode)
+                                .font(.system(size: 28, weight: .bold, design: .monospaced))
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 12)
+                                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                                .textSelection(.enabled)
+                            
+                            Button(action: {
+#if os(iOS)
+                                UIPasteboard.general.string = userCode
+#elseif os(macOS)
+                                NSPasteboard.general.clearContents()
+                                NSPasteboard.general.setString(userCode, forType: .string)
+#endif
+                            }) {
+                                Image(systemName: "doc.on.doc")
+                                    .font(.system(size: 20, weight: .medium))
+                                    .foregroundStyle(.blue)
+                                    .frame(width: 44, height: 44)
+                                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
                 }
                 
-                HStack(spacing: 16) {
+                // Buttons
+#if os(macOS)
+                HStack(spacing: 12) {
+                    Button("Cancel") {
+                        authManager.cancelAuthentication()
+                    }
+                    .keyboardShortcut(.cancelAction)
+                    .buttonStyle(MacSecondaryButtonStyle())
+                    
+                    Button {
+                        Task {
+                            await authManager.openWebSession()
+                        }
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "arrow.right.circle.fill")
+                            Text("Continue")
+                        }
+                    }
+                    .keyboardShortcut(.defaultAction)
+                    .buttonStyle(MacPrimaryButtonStyle())
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+#else
+                VStack(spacing: 12) {
                     Button("Continue") {
                         Task {
                             await authManager.openWebSession()
                         }
                     }
                     .font(.body)
+                    .fontWeight(.semibold)
                     .foregroundStyle(.white)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
                     .background(.blue)
-                    .cornerRadius(8)
+                    .cornerRadius(12)
                     
                     Button("Cancel") {
                         authManager.cancelAuthentication()
                     }
                     .font(.body)
+                    .fontWeight(.medium)
                     .foregroundStyle(.red)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(.red.opacity(0.1))
+                    .cornerRadius(12)
                 }
-                
-
+#endif
             }
         } else {
             ProgressView("Starting authentication...")
@@ -548,6 +655,48 @@ struct InstructionStepView: View {
         }
     }
 }
+
+// MARK: - macOS Button Styles
+#if os(macOS)
+struct MacPrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 14, weight: .semibold))
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.accentColor.opacity(configuration.isPressed ? 0.85 : 1.0))
+            )
+            .foregroundStyle(.white)
+            .shadow(color: .black.opacity(configuration.isPressed ? 0.05 : 0.12), radius: configuration.isPressed ? 2 : 6, x: 0, y: configuration.isPressed ? 1 : 2)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .stroke(.white.opacity(0.15), lineWidth: 1)
+            )
+            .animation(.easeInOut(duration: 0.12), value: configuration.isPressed)
+    }
+}
+
+struct MacSecondaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 14, weight: .medium))
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.secondary.opacity(configuration.isPressed ? 0.12 : 0.08))
+            )
+            .foregroundStyle(.primary)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .stroke(Color.primary.opacity(0.08), lineWidth: 1)
+            )
+            .animation(.easeInOut(duration: 0.12), value: configuration.isPressed)
+    }
+}
+#endif
 
 struct RepositoryPickerView: View {
     @EnvironmentObject var authManager: GitHubAuthManager
